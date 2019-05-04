@@ -1,6 +1,6 @@
 # movie_looker
 
-A new Flutter application.
+It's a mobile application that uses TMDB API for movies search.
 
 ## Getting Started
 
