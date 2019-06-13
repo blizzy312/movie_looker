@@ -1,48 +1,116 @@
 import 'package:flutter/material.dart';
+import 'package:movie_looker/src/blocs/hidden_navigator_bloc.dart';
+import 'package:movie_looker/src/blocs/hidden_navogator_provider.dart';
+import 'package:movie_looker/src/widgets/animated_menu_item.dart';
+import 'package:movie_looker/src/widgets/custom_animation.dart';
 import 'package:movie_looker/src/widgets/menu_items.dart';
 
-class MenuScreen extends StatelessWidget {
+class MenuScreen extends StatefulWidget {
   final int selectedMenu;
 
   MenuScreen({this.selectedMenu});
 
   @override
+  _MenuScreenState createState() => _MenuScreenState();
+}
+
+class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
+
+  AnimationController animationController;
+  Animation<double> titleAnimation;
+  Animation<double> opacityAnimation;
+  Animation<double> translationAnimation;
+
+  static bool noStaggering = false;
+
+  @override
+  void initState() {
+    super.initState();
+    animationController = new AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600)
+    );
+    titleAnimation = Tween(begin: 250.0, end: -50.0 )
+      .animate(
+      CurvedAnimation(
+        parent: animationController,
+        curve: Curves.easeOut),
+    );
+
+    opacityAnimation = Tween(begin: 0.0, end: 1.0)
+      .animate(
+      CurvedAnimation(
+        parent: animationController,
+        curve: Curves.easeOut),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
+
+
+    final hiddenNavigatorBloc = HiddenNavigatorProvider.of(context);
     return Material(
       color: Colors.transparent,
       child: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
-          color: Colors.grey,
-        ),
-        child: Stack(
-          children: <Widget>[
-            createMenuTitle(),
-            createMenuItems(),
-          ],
+//        decoration: BoxDecoration(
+//          image: DecorationImage(
+//            image: AssetImage('assets/img/dark_background.jpg'),
+//            fit: BoxFit.cover
+//          ),
+//        ),
+        child: StreamBuilder<Object>(
+          stream: hiddenNavigatorBloc.currentMenuState,
+          builder: (context, snapshot) {
+            if(snapshot.data == MenuState.closed){
+              noStaggering = true;
+              animationController.reverse();
+            }else{
+              noStaggering = false;
+              animationController.forward();
+            }
+            return Stack(
+              children: <Widget>[
+                createMenuTitle(),
+                createMenuItems(hiddenNavigatorBloc),
+              ],
+            );
+          }
         ),
       ),
     );
   }
 
   createMenuTitle(){
-    return Transform(
-      transform: Matrix4.translationValues(
-        -100.0,
-        0.0,
-        0.0,
-      ),
+
+    return AnimatedBuilder(
+      animation: animationController,
+      builder: (context, child){
+        return Transform(
+          transform: Matrix4.translationValues(
+            titleAnimation.value,
+            50.0,
+            0.0,),
+
+          child:  Opacity(
+            opacity: opacityAnimation.value,
+            child: child,
+          ),
+        );
+      },
       child: OverflowBox(
         maxWidth: double.infinity,
         alignment: Alignment.topLeft,
         child: Padding(
-          padding: const EdgeInsets.all(30.0),
+          padding: const EdgeInsets.all(10.0),
           child: Text(
             'Menu',
             style: TextStyle(
-              color: Color(0x88444444),
-              fontSize: 240.0,
+              color: Colors.grey[800],
+              fontSize: 135.0,
+              fontFamily: 'Aquatico'
             ),
             textAlign: TextAlign.left,
             softWrap: false,
@@ -50,9 +118,10 @@ class MenuScreen extends StatelessWidget {
         ),
       ),
     );
+
   }
 
-  createMenuItems(){
+  createMenuItems(hiddenNavigatorBloc){
     return Transform(
       transform: new Matrix4.translationValues(
         0.0,
@@ -61,17 +130,35 @@ class MenuScreen extends StatelessWidget {
       ),
       child: Column(
         children: <Widget>[
-          MenuItem(
-            title: 'Movies', isSelected: selectedMenu == 0 ? true : false,
+          AnimatedMenuItem(
+            content: MenuItem(title: 'DISCOVER', isSelected: widget.selectedMenu == 0 ? true : false, hiddenNavigatorBloc: hiddenNavigatorBloc),
+            animationController: animationController,
+            opacityAnimation:  opacityAnimation,
+            translationAnimation: new CustomAnimation(begin: 300.0, end: 0.0, animationController: animationController, curve: noStaggering == true ? Curves.easeOut : Interval(0.0, 0.5, curve: Curves.easeOut)).getCustomAnimation(),
           ),
-          MenuItem(
-            title: 'menu2', isSelected: selectedMenu == 1? true : false,
+          AnimatedMenuItem(
+            content: MenuItem(title: 'MOVIES', isSelected: widget.selectedMenu == 1 ? true : false, hiddenNavigatorBloc: hiddenNavigatorBloc),
+            animationController: animationController,
+            opacityAnimation:  opacityAnimation,
+            translationAnimation: new CustomAnimation(begin: 300.0, end: 0.0, animationController: animationController, curve: noStaggering == true ? Curves.easeOut : Interval(0.15, 0.65, curve: Curves.easeOut)).getCustomAnimation(),
           ),
-          MenuItem(
-            title: 'menu3', isSelected: selectedMenu == 2 ? true : false,
+          AnimatedMenuItem(
+            content: MenuItem(title: 'TV SHOWS', isSelected: widget.selectedMenu == 2 ? true : false, hiddenNavigatorBloc: hiddenNavigatorBloc),
+            animationController: animationController,
+            opacityAnimation:  opacityAnimation,
+            translationAnimation: new CustomAnimation(begin: 300.0, end: 0.0, animationController: animationController, curve: noStaggering == true ? Curves.easeOut : Interval(0.25, 0.75, curve: Curves.easeOut)).getCustomAnimation(),
           ),
-          MenuItem(
-            title: 'Settings', isSelected: selectedMenu == 3 ? true : false,
+          AnimatedMenuItem(
+            content: MenuItem(title: 'CELEBRITIES', isSelected: widget.selectedMenu == 3 ? true : false, hiddenNavigatorBloc: hiddenNavigatorBloc),
+            animationController: animationController,
+            opacityAnimation:  opacityAnimation,
+            translationAnimation: new CustomAnimation(begin: 300.0, end: 0.0, animationController: animationController, curve: noStaggering == true ? Curves.easeOut : Interval(0.25, 0.75, curve: Curves.easeOut)).getCustomAnimation(),
+          ),
+          AnimatedMenuItem(
+            content: MenuItem(title: 'SETTINGS', isSelected: widget.selectedMenu == 4 ? true : false, hiddenNavigatorBloc: hiddenNavigatorBloc),
+            animationController: animationController,
+            opacityAnimation:  opacityAnimation,
+            translationAnimation: new CustomAnimation(begin: 300.0, end: 0.0, animationController: animationController, curve: noStaggering == true ? Curves.easeOut : Interval(0.35, 0.85, curve: Curves.easeOut)).getCustomAnimation(),
           ),
         ],
       ),
