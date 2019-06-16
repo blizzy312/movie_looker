@@ -32,7 +32,7 @@ class MovieCard extends StatelessWidget {
               child: Hero(
                 tag: id,
                 child: Image.network(
-                  'https://image.tmdb.org/t/p/w500$posterPath',
+                  'https://image.tmdb.org/t/p/w300$posterPath',
                   fit: BoxFit.cover,
                   width: double.infinity,
                 ),
@@ -101,9 +101,12 @@ class MovieCard extends StatelessWidget {
   }
 
   String changeDate(String date){
-    DateTime myDatetime = DateTime.parse("$date");
-    String x = new DateFormat("MMM d").format(myDatetime).toString();
-    return x;
+    if(date != null){
+      DateTime myDatetime = DateTime.parse("$date");
+      String x = new DateFormat("MMM d").format(myDatetime).toString();
+      return x;
+    }
+    return "";
   }
 
 }

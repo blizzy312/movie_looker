@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:movie_looker/src/utils/types.dart';
 import 'package:movie_looker/src/widgets/collection_of_movies.dart';
 
 
@@ -12,8 +13,6 @@ import 'package:movie_looker/src/models/movie_model.dart';
 import 'package:movie_looker/src/models/videos_model.dart';
 import 'package:movie_looker/src/widgets/casting_actor_card.dart';
 import 'package:movie_looker/src/widgets/genres_widget.dart';
-
-
 
 
 
@@ -46,32 +45,7 @@ class MovieDetails extends StatelessWidget {
                 offset: Offset(0, -25),
                 child: Stack(
                   children: <Widget>[
-                    Container(
-                      height:MediaQuery.of(context).size.height * 0.7,
-                      width: double.infinity,
-                      child: ShaderMask(
-                        child: Hero(
-                          tag: currentMovie.id,
-                          child: Image.network(
-                            'https://image.tmdb.org/t/p/w500${currentMovie.posterPath}',
-                            fit: BoxFit.cover,
-                            alignment: Alignment.topCenter,
-                          ),
-                        ),
-                        shaderCallback: (Rect bounds){
-                          return LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.transparent,
-                              Colors.indigo[900]
-                            ],
-                            stops: [0.0, 0.95]
-                          ).createShader(bounds);
-                        },
-                        blendMode: BlendMode.srcATop,
-                      ),
-                    ),
+                    backgroundImage(context, currentMovie.posterPath),
                     Positioned(
                       bottom: 15,
                       left: 15,
@@ -89,6 +63,32 @@ class MovieDetails extends StatelessWidget {
           );
         }
       )
+    );
+  }
+
+  Widget backgroundImage(BuildContext context, String posterPath){
+    return Container(
+      height:MediaQuery.of(context).size.height * 0.7,
+      width: double.infinity,
+      child: ShaderMask(
+        child: Image.network(
+          'https://image.tmdb.org/t/p/w500$posterPath',
+          fit: BoxFit.cover,
+          alignment: Alignment.topCenter,
+        ),
+        shaderCallback: (Rect bounds){
+          return LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.transparent,
+              Colors.indigo[900]
+            ],
+            stops: [0.0, 0.95]
+          ).createShader(bounds);
+        },
+        blendMode: BlendMode.srcATop,
+      ),
     );
   }
 
@@ -150,7 +150,7 @@ class MovieDetails extends StatelessWidget {
           SizedBox(
             height: 15,
           ),
-          getMovieParameters(currentMovie),
+          getMovieInfo(currentMovie),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Text(
@@ -199,7 +199,7 @@ class MovieDetails extends StatelessWidget {
     );
   }
 
-  Widget getMovieParameters(MovieModel currentMovie){
+  Widget getMovieInfo(MovieModel currentMovie){
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       child: Row(
@@ -304,7 +304,7 @@ class MovieDetails extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Text(
-            'CASTING',
+            'CAST',
             overflow: TextOverflow.fade,
             style: TextStyle(
               color: Colors.white,
@@ -453,13 +453,14 @@ class MovieDetails extends StatelessWidget {
   }
 
   Widget getSimilarMovies(){
-      return CollectionOfMoviesWidget(
-        title: 'See Also',
-        onPressed: null,
-        stream: movieBloc.fetchSimilarMovies,
-        type: MovieType.Normal,
-        backgroundColor: Colors.transparent,
-      );
+    return CollectionOfMoviesWidget(
+      title: 'See Also',
+      onPressed: null,
+      stream: movieBloc.fetchSimilarMovies,
+      contentType: ContentType.Movie,
+      type: MovieType.Normal,
+      backgroundColor: Colors.transparent,
+    );
   }
 
   double modifyRating(double rating){

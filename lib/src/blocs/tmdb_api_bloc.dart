@@ -20,9 +20,11 @@ class TmdbApiBloc{
   final _topRatedProvider = BehaviorSubject<DiscoverMoviesModel>();
   final _upcomingMoviesProvider = BehaviorSubject<DiscoverMoviesModel>();
 
+  final _trendingTvShowsProvider = BehaviorSubject<DiscoverTvShowsModel>();
   final _mostPopularTvShowsProvider = BehaviorSubject<DiscoverTvShowsModel>();
   final _topRatedTvShowsProvider = BehaviorSubject<DiscoverTvShowsModel>();
 
+  final _trendingCelebritiesProvider = BehaviorSubject<CelebritiesModel>();
   final _mostPopularCelebritiesProvider = BehaviorSubject<CelebritiesModel>();
 
   final _movieProvider = PublishSubject<MovieModel>();
@@ -41,9 +43,11 @@ class TmdbApiBloc{
   Observable<DiscoverMoviesModel> get topRatedMovies => _topRatedProvider.stream;
   Observable<DiscoverMoviesModel> get upcomingMovies => _upcomingMoviesProvider.stream;
 
+  Observable<DiscoverTvShowsModel> get trendingTvShows => _trendingTvShowsProvider.stream;
   Observable<DiscoverTvShowsModel> get mostPopularTvShows => _mostPopularTvShowsProvider.stream;
   Observable<DiscoverTvShowsModel> get topRatedTvShows => _topRatedTvShowsProvider.stream;
 
+  Observable<CelebritiesModel> get trendingCelebrities => _trendingCelebritiesProvider.stream;
   Observable<CelebritiesModel> get mostPopularCelebrities => _mostPopularCelebritiesProvider.stream;
 
   Observable<MovieModel> get fetchMovie => _movieProvider.stream;
@@ -71,11 +75,13 @@ class TmdbApiBloc{
   }
 
   fetchTvShowPage() async {
+    _trendingTvShowsProvider.sink.add(await _repository.getTrendingTvShows());
     _mostPopularTvShowsProvider.sink.add(await _repository.getMostPopularTvShows());
     _topRatedTvShowsProvider.sink.add(await _repository.getTopRatedTvShows());
   }
 
   fetchCelebritiesPage() async {
+    _trendingCelebritiesProvider.sink.add(await _repository.getTrendingCelebrities());
     _mostPopularCelebritiesProvider.sink.add(await _repository.getMostPopularCelebrities());
   }
 
@@ -109,9 +115,11 @@ class TmdbApiBloc{
     _topRatedProvider.close();
     _upcomingMoviesProvider.close();
 
+    _trendingTvShowsProvider.close();
     _mostPopularTvShowsProvider.close();
     _topRatedTvShowsProvider.close();
 
+    _trendingCelebritiesProvider.close();
     _mostPopularCelebritiesProvider.close();
 
     _movieProvider.close();

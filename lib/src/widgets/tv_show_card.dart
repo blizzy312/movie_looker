@@ -27,7 +27,7 @@ class TvShowCard extends StatelessWidget {
             Flexible(
               flex: 3,
               child: Image.network(
-                'https://image.tmdb.org/t/p/w500$posterPath',
+                'https://image.tmdb.org/t/p/w300$posterPath',
                 fit: BoxFit.cover,
                 height: MediaQuery.of(context).size.height * 0.50,
                 width: MediaQuery.of(context).size.width * 0.5,
@@ -36,7 +36,7 @@ class TvShowCard extends StatelessWidget {
             Flexible(
               flex: 1,
               child: Container(
-                color: Color(0xFF6387A6),
+                color: Colors.grey[700],
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 5),
                   child: Column(

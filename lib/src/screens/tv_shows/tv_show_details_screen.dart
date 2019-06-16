@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:movie_looker/src/models/discover_tv_shows_model.dart';
+import 'package:movie_looker/src/utils/types.dart';
+import 'package:movie_looker/src/widgets/collection_of_movies.dart';
 import 'package:movie_looker/src/widgets/loading_card.dart';
 import 'package:movie_looker/src/widgets/movie_card.dart';
 import 'package:youtube_player/youtube_player.dart';
@@ -36,43 +38,49 @@ class TvShowDetails extends StatelessWidget {
           TvShowModel currentTvShow = tvShowSnapshot.data;
           return ListView(
             children: <Widget>[
-              Stack(
-                children: <Widget>[
-                  Container(
-                    height:MediaQuery.of(context).size.height * 0.7,
-                    width: double.infinity,
-                    child: Hero(
-                      tag: currentTvShow.id,
-                      child: ShaderMask(
-                        child: Image.network(
-                          'https://image.tmdb.org/t/p/w500${currentTvShow.posterPath}',
-                          fit: BoxFit.cover,
-                          alignment: Alignment.topCenter,
+              Transform.translate(
+                offset: Offset(0, -25),
+                child: Stack(
+                  children: <Widget>[
+                    Container(
+                      height:MediaQuery.of(context).size.height * 0.7,
+                      width: double.infinity,
+                      child: Hero(
+                        tag: currentTvShow.id,
+                        child: ShaderMask(
+                          child: Image.network(
+                            'https://image.tmdb.org/t/p/w500${currentTvShow.posterPath}',
+                            fit: BoxFit.cover,
+                            alignment: Alignment.topCenter,
+                          ),
+                          shaderCallback: (Rect bounds){
+                            return LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.transparent,
+                                Colors.indigo[900]
+                              ],
+                              stops: [0.0, 0.95]
+                            ).createShader(bounds);
+                          },
+                          blendMode: BlendMode.srcATop,
                         ),
-                        shaderCallback: (Rect bounds){
-                          return LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.transparent,
-                              Colors.indigo[900]
-                            ],
-                            stops: [0.0, 0.95]
-                          ).createShader(bounds);
-                        },
-                        blendMode: BlendMode.srcATop,
                       ),
                     ),
-                  ),
-                  Positioned(
-                    bottom: 15,
-                    left: 15,
-                    right: 15,
-                    child: getTitleInfo(context, currentTvShow),
-                  ),
-                ],
+                    Positioned(
+                      bottom: 15,
+                      left: 15,
+                      right: 15,
+                      child: getTitleInfo(context, currentTvShow),
+                    ),
+                  ],
+                ),
               ),
-              getDetails(context, currentTvShow)
+              Transform.translate(
+                offset: Offset(0, -25),
+                child: getDetails(context, currentTvShow)
+              ),
             ],
           );
         }
@@ -409,98 +417,105 @@ class TvShowDetails extends StatelessWidget {
   }
 
   Widget getSimilarTvShows(BuildContext context){
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.55,
-      color: Colors.transparent,
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 15, left: 15, bottom: 10),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Text(
-                    "SEE ALSO",
-                    style: TextStyle(
-                      fontSize: 25,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-                FlatButton(
-                  onPressed: (){
-
-                  },
-                  child: Text(
-                    "SEE ALL",
-                    style: TextStyle(
-                      color: Colors.blue
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          StreamBuilder<DiscoverTvShowsModel>(
-            stream: movieBloc.fetchSimilarTvShows,
-            builder: (context, snapshot) {
-              if(!snapshot.hasData){
-                return Container(
-                  height: MediaQuery.of(context).size.height * 0.4,
-                  width: double.infinity,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 16,
-                    itemBuilder: (context, index){
-                      return Row(
-                        children: <Widget>[
-                          index == 0 ? SizedBox(width: 15,) : SizedBox(width: 0),
-                          LoadingCard(),
-                          SizedBox(
-                            width: 15,
-                          )
-                        ],
-                      );
-                    },
-                  ),
-                );
-              }
-              var movies = snapshot.data.results;
-              return Container(
-                height: MediaQuery.of(context).size.height * 0.4,
-                width: double.infinity,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: movies.length ?? 0,
-                  itemBuilder: (context, index){
-                    return Row(
-                      children: <Widget>[
-                        index == 0 ? SizedBox(width: 15,) : SizedBox(width: 0),
-                        GestureDetector(
-                          onTap: (){
-                            movieBloc.fetchMovieByID(movies[index].id);
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => TvShowDetails( movieBloc: movieBloc)));
-                          },
-                          child: MovieCard(
-                            id: movies[index].id,
-                            posterPath: movies[index].posterPath,
-                            title: movies[index].name,
-                            rating: movies[index].voteAverage,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 15,
-                        )
-                      ],
-                    );
-                  },
-                ),
-              );
-            }
-          ),
-        ],
-      ),
+//    return Container(
+//      height: MediaQuery.of(context).size.height * 0.55,
+//      color: Colors.transparent,
+//      child: Column(
+//        children: <Widget>[
+//          Padding(
+//            padding: const EdgeInsets.only(top: 15, left: 15, bottom: 10),
+//            child: Row(
+//              children: <Widget>[
+//                Expanded(
+//                  child: Text(
+//                    "SEE ALSO",
+//                    style: TextStyle(
+//                      fontSize: 25,
+//                      color: Colors.white,
+//                      fontWeight: FontWeight.w400,
+//                    ),
+//                  ),
+//                ),
+//                FlatButton(
+//                  onPressed: (){
+//
+//                  },
+//                  child: Text(
+//                    "SEE ALL",
+//                    style: TextStyle(
+//                      color: Colors.blue
+//                    ),
+//                  ),
+//                ),
+//              ],
+//            ),
+//          ),
+//          StreamBuilder<DiscoverTvShowsModel>(
+//            stream: movieBloc.fetchSimilarTvShows,
+//            builder: (context, snapshot) {
+//              if(!snapshot.hasData){
+//                return Container(
+//                  height: MediaQuery.of(context).size.height * 0.4,
+//                  width: double.infinity,
+//                  child: ListView.builder(
+//                    scrollDirection: Axis.horizontal,
+//                    itemCount: 16,
+//                    itemBuilder: (context, index){
+//                      return Row(
+//                        children: <Widget>[
+//                          index == 0 ? SizedBox(width: 15,) : SizedBox(width: 0),
+//                          LoadingCard(),
+//                          SizedBox(
+//                            width: 15,
+//                          )
+//                        ],
+//                      );
+//                    },
+//                  ),
+//                );
+//              }
+//              var movies = snapshot.data.results;
+//              return Container(
+//                height: MediaQuery.of(context).size.height * 0.4,
+//                width: double.infinity,
+//                child: ListView.builder(
+//                  scrollDirection: Axis.horizontal,
+//                  itemCount: movies.length ?? 0,
+//                  itemBuilder: (context, index){
+//                    return Row(
+//                      children: <Widget>[
+//                        index == 0 ? SizedBox(width: 15,) : SizedBox(width: 0),
+//                        GestureDetector(
+//                          onTap: (){
+//                            movieBloc.fetchMovieByID(movies[index].id);
+//                            Navigator.push(context, MaterialPageRoute(builder: (context) => TvShowDetails( movieBloc: movieBloc)));
+//                          },
+//                          child: MovieCard(
+//                            id: movies[index].id,
+//                            posterPath: movies[index].posterPath,
+//                            title: movies[index].name,
+//                            rating: movies[index].voteAverage,
+//                          ),
+//                        ),
+//                        SizedBox(
+//                          width: 15,
+//                        )
+//                      ],
+//                    );
+//                  },
+//                ),
+//              );
+//            }
+//          ),
+//        ],
+//      ),
+//    );
+    return CollectionOfMoviesWidget(
+      title: 'See also',
+      onPressed: null,
+      stream: movieBloc.fetchSimilarTvShows,
+      contentType: ContentType.TvShow,
+      backgroundColor: Color(0xFF3A3940),
     );
   }
 

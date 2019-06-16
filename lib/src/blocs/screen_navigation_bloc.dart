@@ -6,50 +6,59 @@ import 'package:rxdart/rxdart.dart';
 import 'package:flutter/material.dart';
 
 class ScreensBloc{
-  final _currentScreenProvider = PublishSubject<Widget>();
+//  final _currentScreenProvider = BehaviorSubject<Widget>();
   final _navigationListener = BehaviorSubject<int>();
 
-  ScreensBloc(){
-    _navigationListener.listen((ind) {
-      print('inside of bloc $ind');
-      Widget temp;
-      switch (ind) {
+//  ScreensBloc(){
+//    _navigationListener.listen((ind) {
+//      print('inside of bloc $ind');
+//      Widget temp;
+//      switch (ind) {
+//
+//        case  0:
+//          temp = HomeScreen();
+////          _currentScreenProvider.sink.add(HomeScreen());
+//          break;
+//        case  1:
+//          temp = MoviesScreen();
+////          _currentScreenProvider.sink.add(MoviesScreen());
+//          break;
+//        case  2:
+//          temp = TvShowsScreen();
+////          _currentScreenProvider.sink.add(TvShowsScreen());
+//          break;
+//        case  3:
+//          temp = CelebritiesScreen();
+////          _currentScreenProvider.sink.add(CelebritiesScreen());
+//          break;
+//        default:
+//          temp = HomeScreen();
+////          _currentScreenProvider.sink.add(HomeScreen());
+//          break;
+//      }
+//      print('temp is $temp');
+//      _currentScreenProvider.sink.add(temp);
+//    });
+//  }
+//
+//  Observable<Widget> get fetchCurrentScreen => _currentScreenProvider.stream;
 
-        case  0:
-          temp = HomeScreen();
-//          _currentScreenProvider.sink.add(HomeScreen());
-          break;
-        case  1:
-          temp = MoviesScreen();
-//          _currentScreenProvider.sink.add(MoviesScreen());
-          break;
-        case  2:
-          temp = TvShowsScreen();
-//          _currentScreenProvider.sink.add(TvShowsScreen());
-          break;
-        case  3:
-          temp = CelebritiesScreen();
-//          _currentScreenProvider.sink.add(CelebritiesScreen());
-          break;
-        default:
-          temp = HomeScreen();
-//          _currentScreenProvider.sink.add(HomeScreen());
-          break;
-      }
-      print('temp is $temp');
-      _currentScreenProvider.sink.add(temp);
-    });
-  }
+  Observable<int> get fetchNavigationIndex => _navigationListener.stream;
 
-  Observable<Widget> get fetchCurrentScreen => _currentScreenProvider.stream;
+  Function(int) get pushNavigationIndex => _navigationListener.sink.add;
 
+//  pushNavigationIndex(int ind){
+//    _navigationListener.sink.add(ind);
+//  }
+
+  int fetchIndex () => _navigationListener.value;
 //  Function(int) get pushNavigationIndex => _navigationListener.sink.add;
-  pushNavigationIndex(int ind){
-    _navigationListener.sink.add(ind);
-  }
+//  pushNavigationIndex(int ind){
+//    _navigationListener.sink.add(ind);
+//  }
 
   dispose(){
-    _currentScreenProvider.close();
+//    _currentScreenProvider.close();
     _navigationListener.close();
   }
 }

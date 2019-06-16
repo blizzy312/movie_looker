@@ -40,6 +40,10 @@ class Repository{
     return await ApiProvider().getUpcomingMovies();
   }
 
+  Future<DiscoverTvShowsModel> getTrendingTvShows() async {
+    return await ApiProvider().getTrendingTvShows();
+  }
+
   Future<DiscoverTvShowsModel> getMostPopularTvShows() async {
     return await ApiProvider().getMostPopularTvShows();
   }
@@ -90,5 +94,9 @@ class Repository{
 
   Future<DiscoverTvShowsModel> fetchSimilarTvShows(int tvShowID) async{
     return await ApiProvider().getSimilarTvShows(tvShowID);
+  }
+
+  Future<CelebritiesModel> getTrendingCelebrities() async {
+    return await ApiProvider().getTrendingCelebrities();
   }
 }

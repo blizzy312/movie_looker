@@ -57,6 +57,12 @@ class ApiProvider{
     return DiscoverMoviesModel.fromJson(temp);
   }
 
+  Future<DiscoverTvShowsModel> getTrendingTvShows() async{
+    final response = await client.get('$_rootAddress/trending/tv/week?api_key=$_apiKey');
+    final temp = json.decode(response.body);
+    return DiscoverTvShowsModel.fromJson(temp);
+  }
+
   Future<DiscoverTvShowsModel> getMostPopularTvShows() async {
     final response = await client.get('$_rootAddress/tv/popular?api_key=$_apiKey&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1');
     final temp = json.decode(response.body);
@@ -69,12 +75,6 @@ class ApiProvider{
     return DiscoverTvShowsModel.fromJson(temp);
   }
 
-  Future<CelebritiesModel> getMostPopularCelebrities() async {
-    final response = await client.get('$_rootAddress/person/popular?api_key=$_apiKey&language=en-US&page=1');
-    final temp = json.decode(response.body);
-    print(temp);
-    return CelebritiesModel.fromJson(temp);
-  }
 
   Future<MovieModel> getMovie(int movieID) async{
     final response = await client.get('$_rootAddress/movie/$movieID?api_key=$_apiKey&language=en-US');
@@ -135,6 +135,19 @@ class ApiProvider{
     final response = await client.get('$_rootAddress/tv/$tvShowID/similar?api_key=$_apiKey&language=en-US&page=1');
     final temp = json.decode(response.body);
     return DiscoverTvShowsModel.fromJson(temp);
+  }
+
+  Future<CelebritiesModel> getMostPopularCelebrities() async {
+    final response = await client.get('$_rootAddress/person/popular?api_key=$_apiKey&language=en-US&page=1');
+    final temp = json.decode(response.body);
+    print(temp);
+    return CelebritiesModel.fromJson(temp);
+  }
+
+  Future<CelebritiesModel> getTrendingCelebrities() async{
+    final response = await client.get('$_rootAddress/trending/person/week?api_key=$_apiKey');
+    final temp = json.decode(response.body);
+    return CelebritiesModel.fromJson(temp);
   }
 
 }

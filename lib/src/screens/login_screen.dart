@@ -68,7 +68,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:movie_looker/src/blocs/hidden_navogator_provider.dart';
+
 
 
 
@@ -79,7 +79,7 @@ class LoginScreen extends StatelessWidget {
     ScreenUtil.instance = ScreenUtil.getInstance()..init(context);
     ScreenUtil.instance = ScreenUtil(width: 1440, height: 2560, allowFontScaling: true)..init(context);
 //    final bloc = LoginProvider.of(context);
-    final hiddenNavigatorBloc = HiddenNavigatorProvider.of(context);
+//    final hiddenNavigatorBloc = HiddenNavigatorProvider.of(context);
     return Material(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -163,7 +163,7 @@ class LoginScreen extends StatelessWidget {
           RaisedButton(
               onPressed: (){
 //                bloc.guestLogin();
-                hiddenNavigatorBloc.init();
+//                hiddenNavigatorBloc.init();
                 Navigator.pushNamed(context, "/MOVIES");
               },
               child: Text('Login as Guest'),

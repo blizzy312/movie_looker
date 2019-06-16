@@ -1,227 +1,196 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:movie_looker/src/blocs/screens_control_bloc.dart';
+import 'package:movie_looker/src/blocs/screens_control_bloc_provider.dart';
 import 'package:movie_looker/src/blocs/tmdb_api_bloc.dart';
 import 'package:movie_looker/src/blocs/tmdb_api_provider.dart';
 import 'package:movie_looker/src/models/discover_tv_shows_model.dart';
-import 'package:movie_looker/src/screens/tv_shows/tv_show_details_screen.dart';
-import 'package:movie_looker/src/widgets/loading_card.dart';
+import 'package:movie_looker/src/utils/types.dart';
+import 'package:movie_looker/src/widgets/collection_of_movies.dart';
 
-import 'package:movie_looker/src/widgets/movie_card.dart';
-import 'package:movie_looker/src/widgets/tv_show_card.dart';
 
 class TvShowsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
     final moviesBloc = TmdbApiProvider.of(context);
+    final moviesScreenBloc = ScreensControlProvider.of(context);
     moviesBloc.fetchTvShowPage();
+    PageController pageController = PageController(
+      keepPage: true,
+      viewportFraction: 0.38,
+      initialPage: moviesScreenBloc.getCurrentTvShowsPage().toInt() ?? 0,
+    );
+    pageController.addListener( () {
+      moviesScreenBloc.pushTvShowsPagePosition(pageController.page);
+    });
     return Scaffold(
       body: Container(
-        color: Color(0xFF011A27),
+        color: Color(0xFF26252C),
         child: ListView(
           children: <Widget>[
-//            trendingTvShows(context, moviesBloc),
+            trendingTvShows(context, moviesBloc, moviesScreenBloc, pageController),
             SizedBox(height: 20,),
-            mostPopularTvShows(context, moviesBloc),
+            mostPopularTvShows(moviesBloc),
             SizedBox(height: 20,),
-            topRatedTvShows(context, moviesBloc),
+            topRatedTvShows(moviesBloc),
           ],
         ),
       ),
     );
   }
 
-//  Widget trendingTvShows(BuildContext context, TmdbApiBloc moviesBloc){
-//    return
-//  }
-
-  Widget mostPopularTvShows(BuildContext context, TmdbApiBloc moviesBloc){
+  Widget trendingTvShows(BuildContext context, TmdbApiBloc moviesBloc, ScreensControlBloc moviesScreenBloc, PageController pageController){
     return Container(
-      height: MediaQuery.of(context).size.height * 0.55,
-      color: Color(0xFF063872),
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 15, left: 15, bottom: 10),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Text(
-                    "Popular Tv Shows",
-                    style: TextStyle(
-                      fontSize: 25,
-                      color: Colors.white
-                    ),
-                  ),
-                ),
-                FlatButton(
-                  onPressed: (){
-
-                  },
-                  child: Text(
-                    "SEE ALL",
-                    style: TextStyle(
-                      color: Colors.blue
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          StreamBuilder<DiscoverTvShowsModel>(
-            stream: moviesBloc.mostPopularTvShows,
+      height: MediaQuery.of(context).size.height * 0.65,
+      color: Colors.transparent,
+      child: StreamBuilder<DiscoverTvShowsModel>(
+        stream: moviesBloc.trendingTvShows,
+        builder: (context, AsyncSnapshot<DiscoverTvShowsModel> trendingSnapshot){
+          if(!trendingSnapshot.hasData){
+            return Container();
+          }
+          var tvShows = trendingSnapshot.data.results;
+          return StreamBuilder<double>(
+            initialData: moviesScreenBloc.getCurrentTvShowsPage(),
+            stream: moviesScreenBloc.getTvShowsPagePosition,
             builder: (context, snapshot) {
               if(!snapshot.hasData){
-                return Container(
-                  height: MediaQuery.of(context).size.height * 0.4,
-                  width: double.infinity,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 16,
-                    itemBuilder: (context, index){
-                      return Row(
-                        children: <Widget>[
-                          index == 0 ? SizedBox(width: 15,) : SizedBox(width: 0),
-                          LoadingCard(),
-                          SizedBox(
-                            width: 15,
-                          )
-                        ],
-                      );
-                    },
-                  ),
-                );
+                return Container();
               }
-              var movies = snapshot.data.results;
-              return Container(
-                height: MediaQuery.of(context).size.height * 0.4,
-                width: double.infinity,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: movies.length,
-                  itemBuilder: (context, index){
-                    return Row(
-                      children: <Widget>[
-                        index == 0 ? SizedBox(width: 15,) : SizedBox(width: 0),
-                        GestureDetector(
-                          onTap: (){
-                            moviesBloc.fetchTvShowByID(movies[index].id);
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => TvShowDetails( movieBloc: moviesBloc)));
-                          },
-                          child: TvShowCard(
-                            id: movies[index].id,
-                            posterPath: movies[index].posterPath,
-                            title: movies[index].name,
-                            rating: movies[index].voteAverage,
-
+              return Stack(
+                children: <Widget>[
+                  Positioned(
+                    bottom: 50,
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    child: ShaderMask(
+                      child: StreamBuilder(
+                        stream: moviesScreenBloc.getTvShowsBackgroundImage,
+                        builder: (context, snapshot){
+                          if(!snapshot.hasData){
+                            return Transform.translate(
+                              offset: Offset(0, -25),
+                              child: Image.network(
+                                'https://image.tmdb.org/t/p/w500${tvShows[pageController.initialPage].posterPath}',
+                                width: double.infinity,
+                                fit: BoxFit.fitWidth,
+                              ),
+                            );
+                          }
+                          return Transform.translate(
+                            offset: Offset(0, -25),
+                            child: Image.network(
+                              'https://image.tmdb.org/t/p/w500${snapshot.data}',
+                              width: double.infinity,
+                              fit: BoxFit.fitWidth,
+                              alignment: Alignment.topCenter,
+                            ),
+                          );
+                        }
+                      ),
+                      shaderCallback: (Rect bounds){
+                        return LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.transparent,
+                            Color(0xFF26252C),
+                          ],
+                          stops: [0.5, 0.85]
+                        ).createShader(bounds);
+                      },
+                      blendMode: BlendMode.srcATop,
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 30,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.3,
+                      child: PageView.builder(
+                        itemCount: tvShows.length,
+                        scrollDirection: Axis.horizontal,
+                        onPageChanged: (ind) {
+                          moviesScreenBloc.setTvShowsBackgroundImage(tvShows[ind].posterPath);
+                        },
+                        controller: pageController,
+                        itemBuilder: (context, index){
+                          double scale =
+                          max( 0.8, (1.2 - (index - snapshot.data).abs()) +
+                            0.3);
+                          return AnimatedBuilder(
+                            animation: pageController,
+                            builder: (context, child){
+                              return ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: Transform.scale(
+                                  scale: scale >= 1.2 ? 1.2 : scale,
+                                  child: child,
+                                ),
+                              );
+                            },
+                            child: Card(
+                              color: Colors.transparent,
+                              elevation: 0,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: Image.network(
+                                  'https://image.tmdb.org/t/p/w500${tvShows[index].posterPath}',
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      child: Center(
+                        child: Text(
+                          '${tvShows[moviesScreenBloc.getCurrentTvShowsPage().roundToDouble().toInt()].name}',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white
                           ),
                         ),
-                        SizedBox(
-                          width: 15,
-                        )
-                      ],
-                    );
-                  },
-                ),
+                      ),
+                    ),
+                  ),
+                ],
               );
             }
-          ),
-        ],
+          );
+        }
       ),
     );
   }
 
-  Widget topRatedTvShows(BuildContext context, TmdbApiBloc moviesBloc){
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.55,
-      color: Color(0xFF355B8C),
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 15, left: 15, bottom: 10),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Text(
-                    "Top Rated Movies",
-                    style: TextStyle(
-                      fontSize: 25,
-                      color: Colors.white
-                    ),
-                  ),
-                ),
-                FlatButton(
-                  onPressed: (){
+  Widget mostPopularTvShows(TmdbApiBloc moviesBloc){
+    return CollectionOfMoviesWidget(
+      title: 'Most Popular',
+      onPressed: null,
+      stream: moviesBloc.mostPopularTvShows,
+      contentType: ContentType.TvShow,
+      backgroundColor: Color(0xFF3A3940),
+    );
+  }
 
-                  },
-                  child: Text(
-                    "SEE ALL",
-                    style: TextStyle(
-                      color: Colors.blue
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          StreamBuilder<DiscoverTvShowsModel>(
-            stream: moviesBloc.topRatedTvShows,
-            builder: (context, snapshot) {
-              if(!snapshot.hasData){
-                return Container(
-                  height: MediaQuery.of(context).size.height * 0.4,
-                  width: double.infinity,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 16,
-                    itemBuilder: (context, index){
-                      return Row(
-                        children: <Widget>[
-                          index == 0 ? SizedBox(width: 15,) : SizedBox(width: 0),
-                          LoadingCard(),
-                          SizedBox(
-                            width: 15,
-                          )
-                        ],
-                      );
-                    },
-                  ),
-                );
-              }
-              var movies = snapshot.data.results;
-              return Container(
-                height: MediaQuery.of(context).size.height * 0.4,
-                width: double.infinity,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: movies.length,
-                  itemBuilder: (context, index){
-                    return Row(
-                      children: <Widget>[
-                        index == 0 ? SizedBox(width: 15,) : SizedBox(width: 0),
-                        GestureDetector(
-                          onTap: (){
-                            moviesBloc.fetchTvShowByID(movies[index].id);
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => TvShowDetails( movieBloc: moviesBloc)));
-                          },
-                          child: MovieCard(
-                            id: movies[index].id,
-                            posterPath: movies[index].posterPath,
-                            title: movies[index].name,
-                            rating: movies[index].voteAverage,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 15,
-                        )
-                      ],
-                    );
-                  },
-                ),
-              );
-            }
-          ),
-        ],
-      ),
+  Widget topRatedTvShows(TmdbApiBloc moviesBloc){
+    return CollectionOfMoviesWidget(
+      title: 'Top Rated',
+      onPressed: null,
+      stream: moviesBloc.topRatedTvShows,
+      contentType: ContentType.TvShow,
+      backgroundColor: Color(0xFF3A3940),
     );
   }
 
