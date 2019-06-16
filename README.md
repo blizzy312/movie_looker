@@ -1,16 +1,19 @@
 # movie_looker
 
-It's a mobile application that uses TMDB API for movies discovery and search.
+It's a mobile application that uses [TMDB API](https://developers.themoviedb.org/3) for movies discovery and search. Currently under development.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+## Installation
+Download this repository into your desired location (for example Desktop) using [git](https://git-scm.com/):
+```
+cd C:\Users\Username\Desktop
+git clone https://github.com/blizzy312/movie_looker.git
+```
+or by downloading repository as zip file and exctact it to your desired location.
 
-A few resources to get you started if this is your first Flutter project:
+## Application Overview
 
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+## License
+License is MIT, see [LICENSE](LICENSE)
+
