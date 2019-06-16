@@ -1,6 +1,6 @@
 # movie_looker
 
-It's a mobile application that uses TMDB API for movies search.
+It's a mobile application that uses TMDB API for movies discovery and search.
 
 ## Getting Started
 
