@@ -14,13 +14,14 @@ or by downloading repository as zip file and exctact it to your desired location
 ## Application Overview
 <table >
   <tr>
-    <td align="left"><img src="../overview_assets/movies_main.png"  width="250" height="500"/></td>
-    <td align="center"><img src="/overview_assets/movies_main2.png"  width="250" height="500"/></td>
-    <td align="right"><img src="/overview_assets/movies_main3.png"  width="250" height="500"/></td>
+    <td align="left"><img src="/overview_assets/movies_main.jpg"  width="250" height="500"/></td>
+    <td align="center"><img src="/overview_assets/movies_main2.jpg"  width="250" height="500"/></td>
+    <td align="right"><img src="/overview_assets/movies_main3.jpg"  width="250" height="500"/></td>
   </tr>
   <tr>
-    <td align="left"><img src="../assets/timer_screen.png"  width="250" height="500"/></td>
-    <td align="center"><img src="../assets/watch_stop_screen.png"  width="250" height="500"/></td>
+    <td align="left"><img src="/overview_assets/movies_detail.jpg"  width="250" height="500"/></td>
+    <td align="center"><img src="/overview_assets/movies_detail2.jpg"  width="250" height="500"/></td>
+    <td align="right"><img src="/overview_assets/tv_shows_main.jpg"  width="250" height="500"/></td>
   </tr>
 </table>
 
