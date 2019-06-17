@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_looker/src/blocs/movies_screen_bloc_provider.dart';
 import 'package:movie_looker/src/screens/base_screen.dart';
 
 import 'blocs/screens_control_bloc_provider.dart';
@@ -16,8 +17,10 @@ class MyApp extends StatelessWidget{
       child: TmdbApiProvider(
         child: ScreensBlocProvider(
           child: ScreensControlProvider(
-            child: MaterialApp(
-              onGenerateRoute: routes,
+            child: MoviesScreenBlocProvider(
+              child: MaterialApp(
+                onGenerateRoute: routes,
+              ),
             ),
           ),
         ),

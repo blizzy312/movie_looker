@@ -9,7 +9,7 @@ import 'package:youtube_player/youtube_player.dart';
 import 'package:movie_looker/src/blocs/tmdb_api_bloc.dart';
 import 'package:movie_looker/src/models/images_model.dart';
 import 'package:movie_looker/src/models/cast_model.dart';
-import 'package:movie_looker/src/models/movie_model.dart';
+import 'package:movie_looker/src/models/movie_details_model.dart';
 import 'package:movie_looker/src/models/videos_model.dart';
 import 'package:movie_looker/src/widgets/casting_actor_card.dart';
 import 'package:movie_looker/src/widgets/genres_widget.dart';
@@ -30,14 +30,14 @@ class MovieDetails extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Color(0xFF1D2840),
-      body: StreamBuilder<MovieModel>(
+      body: StreamBuilder<MovieDetailsModel>(
         stream: movieBloc.fetchMovie,
-        builder: (context, AsyncSnapshot<MovieModel> movieSnapshot) {
+        builder: (context, AsyncSnapshot<MovieDetailsModel> movieSnapshot) {
           if(!movieSnapshot.hasData){
             return Container();
           }
 
-          MovieModel currentMovie = movieSnapshot.data;
+          MovieDetailsModel currentMovie = movieSnapshot.data;
 
           return ListView(
             children: <Widget>[
@@ -92,7 +92,7 @@ class MovieDetails extends StatelessWidget {
     );
   }
 
-  Widget getTitleInfo(context, MovieModel currentMovie){
+  Widget getTitleInfo(context, MovieDetailsModel currentMovie){
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -140,7 +140,7 @@ class MovieDetails extends StatelessWidget {
     );
   }
 
-  Widget getDetails(context, MovieModel currentMovie){
+  Widget getDetails(context, MovieDetailsModel currentMovie){
     return Container(
       color: Color(0xFF1D2840),
       child: Column(
@@ -199,7 +199,7 @@ class MovieDetails extends StatelessWidget {
     );
   }
 
-  Widget getMovieInfo(MovieModel currentMovie){
+  Widget getMovieInfo(MovieDetailsModel currentMovie){
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       child: Row(

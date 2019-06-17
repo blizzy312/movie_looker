@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_looker/src/blocs/tmdb_api_bloc.dart';
 import 'package:movie_looker/src/models/images_model.dart';
 import 'package:movie_looker/src/models/cast_model.dart';
-import 'package:movie_looker/src/models/movie_model.dart';
+import 'package:movie_looker/src/models/movie_details_model.dart';
 import 'package:movie_looker/src/models/videos_model.dart';
 
 import 'package:movie_looker/src/widgets/casting_actor_card.dart';
@@ -26,13 +26,13 @@ class UpcomingMovieDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: StreamBuilder<MovieModel>(
+      body: StreamBuilder<MovieDetailsModel>(
         stream: movieBloc.fetchMovie,
-        builder: (context, AsyncSnapshot<MovieModel> movieSnapshot) {
+        builder: (context, AsyncSnapshot<MovieDetailsModel> movieSnapshot) {
           if(!movieSnapshot.hasData){
             return Container();
           }
-          MovieModel currentMovie = movieSnapshot.data;
+          MovieDetailsModel currentMovie = movieSnapshot.data;
           print(currentMovie.id);
           return ListView(
             children: <Widget>[
@@ -86,7 +86,7 @@ class UpcomingMovieDetails extends StatelessWidget {
     );
   }
 
-  Widget getTitleInfo(context, MovieModel currentMovie){
+  Widget getTitleInfo(context, MovieDetailsModel currentMovie){
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -111,7 +111,7 @@ class UpcomingMovieDetails extends StatelessWidget {
 
 
 
-  Widget getDetails(context, MovieModel currentMovie){
+  Widget getDetails(context, MovieDetailsModel currentMovie){
     return Container(
       color: Color(0xFF1D2840),
       child: Column(
@@ -166,7 +166,7 @@ class UpcomingMovieDetails extends StatelessWidget {
     );
   }
 
-  Widget getMovieParameters(MovieModel currentMovie){
+  Widget getMovieParameters(MovieDetailsModel currentMovie){
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       child: Row(

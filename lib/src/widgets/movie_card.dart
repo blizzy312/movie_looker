@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:movie_looker/src/widgets/collection_of_movies.dart';
+import 'package:movie_looker/src/utils/types.dart';
 
 class MovieCard extends StatelessWidget {
   final int id;

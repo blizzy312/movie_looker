@@ -5,7 +5,7 @@ import 'package:movie_looker/src/models/celebrities_model.dart';
 import 'package:movie_looker/src/models/discover_tv_shows_model.dart';
 import 'package:movie_looker/src/models/images_model.dart';
 import 'package:movie_looker/src/models/cast_model.dart';
-import 'package:movie_looker/src/models/movie_model.dart';
+import 'package:movie_looker/src/models/movie_details_model.dart';
 import 'package:movie_looker/src/models/discover_movies_model.dart';
 import 'package:movie_looker/src/models/tv_show_model.dart';
 import 'package:movie_looker/src/models/videos_model.dart';
@@ -39,20 +39,21 @@ class ApiProvider{
     return DiscoverMoviesModel.fromJson(temp);
   }
 
-  Future<DiscoverMoviesModel> getMostPopularMovies() async {
-    final response = await client.get('$_rootAddress/movie/popular?api_key=$_apiKey&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1');
+  Future<DiscoverMoviesModel> getMostPopularMoviesByPage(int page) async {
+    final response = await client.get('$_rootAddress/movie/popular?api_key=$_apiKey&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=$page');
     final temp = json.decode(response.body);
     return DiscoverMoviesModel.fromJson(temp);
   }
 
-  Future<DiscoverMoviesModel> getTopRatedMovies() async {
-    final response = await client.get('$_rootAddress/movie/top_rated?api_key=$_apiKey&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1');
+  Future<DiscoverMoviesModel> getTopRatedMoviesByPage(int page) async {
+    final response = await client.get('$_rootAddress/movie/top_rated?api_key=$_apiKey&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=$page');
     final temp = json.decode(response.body);
+    print('topRated API $temp');
     return DiscoverMoviesModel.fromJson(temp);
   }
 
-  Future<DiscoverMoviesModel> getUpcomingMovies() async {
-    final response = await client.get('$_rootAddress/movie/upcoming?api_key=$_apiKey&language=en-US&region=US&page=1');
+  Future<DiscoverMoviesModel> getUpcomingMoviesByPage(int page) async {
+    final response = await client.get('$_rootAddress/movie/upcoming?api_key=$_apiKey&language=en-US&region=US&page=$page');
     final temp = json.decode(response.body);
     return DiscoverMoviesModel.fromJson(temp);
   }
@@ -76,10 +77,10 @@ class ApiProvider{
   }
 
 
-  Future<MovieModel> getMovie(int movieID) async{
+  Future<MovieDetailsModel> getMovie(int movieID) async{
     final response = await client.get('$_rootAddress/movie/$movieID?api_key=$_apiKey&language=en-US');
     final temp = json.decode(response.body);
-    return MovieModel.fromJson(temp);
+    return MovieDetailsModel.fromJson(temp);
   }
 
   Future<CastModel> getMovieCasting(int movieID) async{

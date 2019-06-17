@@ -51,7 +51,7 @@ class CollectionOfMoviesWidget extends StatelessWidget {
                 ),
                 FlatButton(
                   onPressed: (){
-
+                    onPressed();
                   },
                   child: Text(
                     "SEE ALL",
@@ -98,7 +98,7 @@ class CollectionOfMoviesWidget extends StatelessWidget {
             ),
           );
         }
-        var movies = snapshot.data.results;
+        var movies = snapshot.data.movies;
         return Container(
           height: MediaQuery.of(context).size.height * 0.4,
           width: double.infinity,
@@ -268,6 +268,6 @@ class CollectionOfMoviesWidget extends StatelessWidget {
   }
 }
 
-enum MovieType{
-  Normal, ComingSoon
-}
+//enum MovieType{
+//  Normal, ComingSoon
+//}

@@ -1,23 +1,22 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:movie_looker/src/blocs/screens_control_bloc.dart';
-import 'package:movie_looker/src/blocs/screens_control_bloc_provider.dart';
+import 'package:movie_looker/src/blocs/movies_screen_bloc.dart';
+import 'package:movie_looker/src/blocs/movies_screen_bloc_provider.dart';
 import 'package:movie_looker/src/blocs/tmdb_api_bloc.dart';
 import 'package:movie_looker/src/blocs/tmdb_api_provider.dart';
 import 'package:movie_looker/src/models/discover_movies_model.dart';
+import 'package:movie_looker/src/screens/see_all_screen.dart';
 import 'package:movie_looker/src/utils/types.dart';
 import 'package:movie_looker/src/widgets/collection_of_movies.dart';
 
 
 class MoviesScreen extends StatelessWidget {
 
-  final double viewPortFraction = 0.35;
-
   @override
   Widget build(BuildContext context) {
     final moviesBloc = TmdbApiProvider.of(context);
-    final moviesScreenBloc = ScreensControlProvider.of(context);
+    final moviesScreenBloc = MoviesScreenBlocProvider.of(context);
     moviesBloc.fetchMoviesPage();
     PageController pageController = PageController(
       keepPage: true,
@@ -35,18 +34,18 @@ class MoviesScreen extends StatelessWidget {
           children: <Widget>[
             trendingMovies(context, moviesBloc, moviesScreenBloc, pageController),
             SizedBox(height: 20,),
-            upcomingMovies(moviesBloc),
+            upcomingMovies(context,moviesBloc),
             SizedBox(height: 20,),
-            mostPopularMovies(moviesBloc),
+            mostPopularMovies(context, moviesBloc),
             SizedBox(height: 20,),
-            topRatedMovies(moviesBloc),
+            topRatedMovies(context, moviesBloc),
           ],
         ),
       ),
     );
   }
 
-  Widget trendingMovies(BuildContext context, TmdbApiBloc moviesBloc, ScreensControlBloc moviesScreenBloc, PageController pageController){
+  Widget trendingMovies(BuildContext context, TmdbApiBloc moviesBloc, MoviesScreenBloc moviesScreenBloc, PageController pageController){
     return Container(
       height: MediaQuery.of(context).size.height * 0.65,
       color: Colors.transparent,
@@ -56,7 +55,7 @@ class MoviesScreen extends StatelessWidget {
           if(!trendingSnapshot.hasData){
             return Container();
           }
-          var movies = trendingSnapshot.data.results;
+          var movies = trendingSnapshot.data.movies;
           return StreamBuilder<double>(
             initialData: moviesScreenBloc.getCurrentMoviesPage(),
             stream: moviesScreenBloc.getMoviesPagePosition,
@@ -179,10 +178,15 @@ class MoviesScreen extends StatelessWidget {
     );
   }
 
-  Widget mostPopularMovies(TmdbApiBloc moviesBloc){
+  Widget mostPopularMovies(BuildContext context, TmdbApiBloc moviesBloc){
     return CollectionOfMoviesWidget(
       title: 'Most Popular',
-      onPressed: null,
+      onPressed: (){
+        Navigator.push(context, MaterialPageRoute(
+          builder: (context)
+          => MoviesSeeAllScreen(movieType: MovieType.Popular,)
+        ));
+      },
       stream: moviesBloc.mostPopularMovies,
       contentType: ContentType.Movie,
       type: MovieType.Normal,
@@ -190,10 +194,15 @@ class MoviesScreen extends StatelessWidget {
     );
   }
 
-  Widget topRatedMovies(TmdbApiBloc moviesBloc){
+  Widget topRatedMovies(BuildContext context, TmdbApiBloc moviesBloc){
     return CollectionOfMoviesWidget(
       title: 'Top rated',
-      onPressed: null,
+      onPressed: (){
+        Navigator.push(context, MaterialPageRoute(
+          builder: (context)
+          => MoviesSeeAllScreen(movieType: MovieType.TopRated,)
+        ));
+      },
       stream: moviesBloc.topRatedMovies,
       contentType: ContentType.Movie,
       type: MovieType.Normal,
@@ -201,10 +210,15 @@ class MoviesScreen extends StatelessWidget {
     );
   }
 
-  Widget upcomingMovies(TmdbApiBloc moviesBloc){
+  Widget upcomingMovies(BuildContext context, TmdbApiBloc moviesBloc){
     return CollectionOfMoviesWidget(
       title: 'Coming soon',
-      onPressed: null,
+      onPressed: (){
+        Navigator.push(context, MaterialPageRoute(
+          builder: (context)
+          => MoviesSeeAllScreen(movieType: MovieType.ComingSoon,)
+        ));
+      },
       stream: moviesBloc.upcomingMovies,
       contentType: ContentType.Movie,
       type: MovieType.ComingSoon,

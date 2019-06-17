@@ -3,7 +3,7 @@ import 'package:movie_looker/src/models/discover_tv_shows_model.dart';
 import 'package:movie_looker/src/models/images_model.dart';
 import 'package:movie_looker/src/models/cast_model.dart';
 import 'package:movie_looker/src/models/discover_movies_model.dart';
-import 'package:movie_looker/src/models/movie_model.dart';
+import 'package:movie_looker/src/models/movie_details_model.dart';
 import 'package:movie_looker/src/models/tv_show_model.dart';
 import 'package:movie_looker/src/models/videos_model.dart';
 
@@ -28,16 +28,16 @@ class Repository{
     return await ApiProvider().getTrendingMovies();
   }
 
-  Future<DiscoverMoviesModel> getMostPopularMovies() async {
-    return await ApiProvider().getMostPopularMovies();
+  Future<DiscoverMoviesModel> getMostPopularMoviesByPage(int page) async {
+    return await ApiProvider().getMostPopularMoviesByPage(page);
   }
 
-  Future<DiscoverMoviesModel> getTopRatedMovies() async {
-    return await ApiProvider().getTopRatedMovies();
+  Future<DiscoverMoviesModel> getTopRatedMoviesByPage(int page) async {
+    return await ApiProvider().getTopRatedMoviesByPage(page);
   }
 
-  Future<DiscoverMoviesModel> getUpcomingMovies() async {
-    return await ApiProvider().getUpcomingMovies();
+  Future<DiscoverMoviesModel> getUpcomingMoviesByPage(int page) async {
+    return await ApiProvider().getUpcomingMoviesByPage(page);
   }
 
   Future<DiscoverTvShowsModel> getTrendingTvShows() async {
@@ -56,7 +56,7 @@ class Repository{
     return await ApiProvider().getMostPopularCelebrities();
   }
 
-  Future<MovieModel> fetchMovie(int movieID) async{
+  Future<MovieDetailsModel> fetchMovie(int movieID) async{
     return await ApiProvider().getMovie(movieID);
   }
 

@@ -1,6 +1,9 @@
+
+import 'package:movie_looker/src/resources/repository.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ScreensControlBloc {
+  final _repository = Repository();
 
   double _moviesCurrentPageNum = 0;
   double _tvShowsCurrentPageNum = 0;
@@ -62,6 +65,38 @@ class ScreensControlBloc {
       _celebsCurrentPageNum = value;
     });
   }
+//
+//  final _cache = Map<int, MovieModel>();
+//  final _downloaders = Map<int, Future<DiscoverMoviesModel>>();
+//
+//  /// Downloads the podcast, if necessary.
+//  Future<MovieModel> getPodcast(int index) async {
+//    print('get podcast $index');
+//    if (!_cache.containsKey(index)) {
+//      final page = index / 20;
+//      print('get podcast page ${page.toInt()}');
+//      await _downloadPodcastsToCache(page.toInt());
+//    }
+//    if (!_cache.containsKey(index)) {
+//      // TODO: The download failed, so you should probably provide a more
+//      // meaningful error here.
+//      throw Error();
+//    }
+//    return _cache[index];
+//  }
+//
+//  /// Downloads a page of podcasts to the cache or just waits if the page is
+//  /// already being downloaded.
+//  Future<void> _downloadPodcastsToCache(int page) async {
+//    if (!_downloaders.containsKey(page)) {
+//      _downloaders[page] = _repository.getUpcomingMovies(page+1);
+//      _downloaders[page].then((_) => _downloaders.remove(page));
+//    }
+//    final tempStore = await _downloaders[page];
+//    for (int i = 0; i < tempStore.movies.length; i++) {
+//      _cache[20 * page + i] = tempStore.movies[i];
+//    }
+//  }
 
   dispose(){
     _moviesImageProvider.close();

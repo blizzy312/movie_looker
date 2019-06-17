@@ -3,7 +3,7 @@ import 'package:movie_looker/src/models/discover_tv_shows_model.dart';
 import 'package:movie_looker/src/models/images_model.dart';
 import 'package:movie_looker/src/models/cast_model.dart';
 import 'package:movie_looker/src/models/discover_movies_model.dart';
-import 'package:movie_looker/src/models/movie_model.dart';
+import 'package:movie_looker/src/models/movie_details_model.dart';
 import 'package:movie_looker/src/models/tv_show_model.dart';
 import 'package:movie_looker/src/models/videos_model.dart';
 import 'package:movie_looker/src/resources/repository.dart';
@@ -27,7 +27,7 @@ class TmdbApiBloc{
   final _trendingCelebritiesProvider = BehaviorSubject<CelebritiesModel>();
   final _mostPopularCelebritiesProvider = BehaviorSubject<CelebritiesModel>();
 
-  final _movieProvider = PublishSubject<MovieModel>();
+  final _movieProvider = PublishSubject<MovieDetailsModel>();
   final _castingProvider = PublishSubject<CastModel>();
   final _imagesProvider = PublishSubject<ImagesModel>();
   final _videosProvider = PublishSubject<VideosModel>();
@@ -50,7 +50,7 @@ class TmdbApiBloc{
   Observable<CelebritiesModel> get trendingCelebrities => _trendingCelebritiesProvider.stream;
   Observable<CelebritiesModel> get mostPopularCelebrities => _mostPopularCelebritiesProvider.stream;
 
-  Observable<MovieModel> get fetchMovie => _movieProvider.stream;
+  Observable<MovieDetailsModel> get fetchMovie => _movieProvider.stream;
 
   Observable<CastModel> get fetchMovieCasting => _castingProvider.stream;
   Observable<ImagesModel> get fetchImages => _imagesProvider.stream;
@@ -61,6 +61,7 @@ class TmdbApiBloc{
 
   Observable<TvShowModel> get fetchTvShow => _tvShowProvider.stream;
 
+//  fetchUpcomingMoviesByPage(page) => _upcomingMoviesProvider.sink.add(page);
 
   fetchDiscoverPage() async{
     _discoverMoviesProvider.sink.add(await _repository.getDiscoverMovies());
@@ -69,9 +70,9 @@ class TmdbApiBloc{
 
   fetchMoviesPage() async {
     _trendingMoviesProvider.sink.add(await _repository.getTrendingMovies());
-    _mostPopularMoviesProvider.sink.add(await _repository.getMostPopularMovies());
-    _topRatedProvider.sink.add(await _repository.getTopRatedMovies());
-    _upcomingMoviesProvider.sink.add(await _repository.getUpcomingMovies());
+    _mostPopularMoviesProvider.sink.add(await _repository.getMostPopularMoviesByPage(1));
+    _topRatedProvider.sink.add(await _repository.getTopRatedMoviesByPage(1));
+    _upcomingMoviesProvider.sink.add(await _repository.getUpcomingMoviesByPage(1));
   }
 
   fetchTvShowPage() async {
