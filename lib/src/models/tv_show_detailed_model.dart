@@ -1,11 +1,11 @@
-import 'genres.dart';
+import 'genre_model.dart';
 
-class TvShowModel {
+class TvShowDetailsModel {
   String backdropPath;
   List<CreatedBy> createdBy;
   List<int> episodeRunTime;
   String firstAirDate;
-  List<Genres> genres;
+  List<GenreModel> genres;
   String homepage;
   int id;
   bool inProduction;
@@ -30,7 +30,7 @@ class TvShowModel {
   num voteAverage;
   int voteCount;
 
-  TvShowModel(
+  TvShowDetailsModel(
     {this.backdropPath,
       this.createdBy,
       this.episodeRunTime,
@@ -60,7 +60,7 @@ class TvShowModel {
       this.voteAverage,
       this.voteCount});
 
-  TvShowModel.fromJson(Map<String, dynamic> json) {
+  TvShowDetailsModel.fromJson(Map<String, dynamic> json) {
     backdropPath = json['backdrop_path'];
     if (json['created_by'] != null) {
       createdBy = new List<CreatedBy>();
@@ -71,9 +71,9 @@ class TvShowModel {
     episodeRunTime = json['episode_run_time'].cast<int>();
     firstAirDate = json['first_air_date'];
     if (json['genres'] != null) {
-      genres = new List<Genres>();
+      genres = new List<GenreModel>();
       json['genres'].forEach((v) {
-        genres.add(new Genres.fromJson(v));
+        genres.add(new GenreModel.fromJson(v));
       });
     }
     homepage = json['homepage'];

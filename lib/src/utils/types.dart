@@ -13,9 +13,8 @@ enum MovieType {
   Normal
 }
 
-enum TvShow {
+enum TvShowType {
   TopRated,
   Popular,
-  ComingSoon,
   Trending
 }

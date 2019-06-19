@@ -5,7 +5,10 @@ import 'package:movie_looker/src/blocs/screens_control_bloc.dart';
 import 'package:movie_looker/src/blocs/screens_control_bloc_provider.dart';
 import 'package:movie_looker/src/blocs/tmdb_api_bloc.dart';
 import 'package:movie_looker/src/blocs/tmdb_api_provider.dart';
+import 'package:movie_looker/src/blocs/tv_shows_screen_bloc.dart';
+import 'package:movie_looker/src/blocs/tv_shows_screen_bloc_provider.dart';
 import 'package:movie_looker/src/models/discover_tv_shows_model.dart';
+import 'package:movie_looker/src/screens/tv_shows/tv_shows_see_all_screen.dart';
 import 'package:movie_looker/src/utils/types.dart';
 import 'package:movie_looker/src/widgets/collection_of_movies.dart';
 
@@ -15,7 +18,7 @@ class TvShowsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final moviesBloc = TmdbApiProvider.of(context);
-    final moviesScreenBloc = ScreensControlProvider.of(context);
+    final moviesScreenBloc = TvShowsScreenBlocProvider.of(context);
     moviesBloc.fetchTvShowPage();
     PageController pageController = PageController(
       keepPage: true,
@@ -32,16 +35,16 @@ class TvShowsScreen extends StatelessWidget {
           children: <Widget>[
             trendingTvShows(context, moviesBloc, moviesScreenBloc, pageController),
             SizedBox(height: 20,),
-            mostPopularTvShows(moviesBloc),
+            mostPopularTvShows(context, moviesBloc),
             SizedBox(height: 20,),
-            topRatedTvShows(moviesBloc),
+            topRatedTvShows(context, moviesBloc),
           ],
         ),
       ),
     );
   }
 
-  Widget trendingTvShows(BuildContext context, TmdbApiBloc moviesBloc, ScreensControlBloc moviesScreenBloc, PageController pageController){
+  Widget trendingTvShows(BuildContext context, TmdbApiBloc moviesBloc, TvShowsScreenBloc moviesScreenBloc, PageController pageController){
     return Container(
       height: MediaQuery.of(context).size.height * 0.65,
       color: Colors.transparent,
@@ -51,7 +54,7 @@ class TvShowsScreen extends StatelessWidget {
           if(!trendingSnapshot.hasData){
             return Container();
           }
-          var tvShows = trendingSnapshot.data.results;
+          var tvShows = trendingSnapshot.data.tvShows;
           return StreamBuilder<double>(
             initialData: moviesScreenBloc.getCurrentTvShowsPage(),
             stream: moviesScreenBloc.getTvShowsPagePosition,
@@ -174,20 +177,30 @@ class TvShowsScreen extends StatelessWidget {
     );
   }
 
-  Widget mostPopularTvShows(TmdbApiBloc moviesBloc){
+  Widget mostPopularTvShows(BuildContext context, TmdbApiBloc moviesBloc){
     return CollectionOfMoviesWidget(
       title: 'Most Popular',
-      onPressed: null,
+      onPressed: (){
+        Navigator.push(context, MaterialPageRoute(
+          builder: (context)
+          => TvShowsSeeAllScreen (tvShowType: TvShowType.Popular,)
+        ));
+      },
       stream: moviesBloc.mostPopularTvShows,
       contentType: ContentType.TvShow,
       backgroundColor: Color(0xFF3A3940),
     );
   }
 
-  Widget topRatedTvShows(TmdbApiBloc moviesBloc){
+  Widget topRatedTvShows(BuildContext context, TmdbApiBloc moviesBloc){
     return CollectionOfMoviesWidget(
       title: 'Top Rated',
-      onPressed: null,
+      onPressed: (){
+        Navigator.push(context, MaterialPageRoute(
+          builder: (context)
+          => TvShowsSeeAllScreen (tvShowType: TvShowType.TopRated,)
+        ));
+      },
       stream: moviesBloc.topRatedTvShows,
       contentType: ContentType.TvShow,
       backgroundColor: Color(0xFF3A3940),

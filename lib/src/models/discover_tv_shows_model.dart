@@ -2,18 +2,18 @@ class DiscoverTvShowsModel {
   int page;
   int totalResults;
   int totalPages;
-  List<Results> results;
+  List<TvShowModel> tvShows;
 
-  DiscoverTvShowsModel({this.page, this.totalResults, this.totalPages, this.results});
+  DiscoverTvShowsModel({this.page, this.totalResults, this.totalPages, this.tvShows});
 
   DiscoverTvShowsModel.fromJson(Map<String, dynamic> json) {
     page = json['page'];
     totalResults = json['total_results'];
     totalPages = json['total_pages'];
     if (json['results'] != null) {
-      results = new List<Results>();
+      tvShows = new List<TvShowModel>();
       json['results'].forEach((v) {
-        results.add(new Results.fromJson(v));
+        tvShows.add(new TvShowModel.fromJson(v));
       });
     }
   }
@@ -23,14 +23,14 @@ class DiscoverTvShowsModel {
     data['page'] = this.page;
     data['total_results'] = this.totalResults;
     data['total_pages'] = this.totalPages;
-    if (this.results != null) {
-      data['results'] = this.results.map((v) => v.toJson()).toList();
+    if (this.tvShows != null) {
+      data['results'] = this.tvShows.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
-class Results {
+class TvShowModel {
   String originalName;
   List<int> genreIds;
   String name;
@@ -45,7 +45,7 @@ class Results {
   String overview;
   String posterPath;
 
-  Results(
+  TvShowModel(
     {this.originalName,
       this.genreIds,
       this.name,
@@ -60,7 +60,7 @@ class Results {
       this.overview,
       this.posterPath});
 
-  Results.fromJson(Map<String, dynamic> json) {
+  TvShowModel.fromJson(Map<String, dynamic> json) {
     originalName = json['original_name'];
     genreIds = json['genre_ids'].cast<int>();
     name = json['name'];

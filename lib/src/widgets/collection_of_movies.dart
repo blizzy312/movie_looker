@@ -164,7 +164,7 @@ class CollectionOfMoviesWidget extends StatelessWidget {
             ),
           );
         }
-        var movies = snapshot.data.results;
+        var movies = snapshot.data.tvShows;
         return Container(
           height: MediaQuery.of(context).size.height * 0.4,
           width: double.infinity,

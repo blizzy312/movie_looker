@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_looker/src/blocs/screen_navigation_bloc_provider.dart';
 import 'package:movie_looker/src/screens/celebrities/celebrities_screen.dart';
 import 'package:movie_looker/src/screens/movies/movies_screen.dart';
-import 'package:movie_looker/src/screens/tv_shows/tv_show_screen.dart';
+import 'package:movie_looker/src/screens/tv_shows/tv_shows_screen.dart';
 import 'package:movie_looker/src/widgets/bottom_nav_bar/fab_bottom_app_bar.dart';
 
 import 'package:movie_looker/src/widgets/bottom_nav_bar/layout.dart';

@@ -1,3 +1,4 @@
+import 'package:movie_looker/src/models/genre_model.dart';
 import 'package:movie_looker/src/models/movie_model.dart';
 import 'package:movie_looker/src/resources/repository.dart';
 import 'package:movie_looker/src/utils/types.dart';
@@ -10,7 +11,10 @@ class MoviesScreenBloc {
   final _moviesPageScaleProvider = BehaviorSubject<double>();
   final _moviesPagePositionProvider = PublishSubject<double>();
 
-  final _moviesProvider = PublishSubject<List<MovieModel>>();
+  final _moviesProvider = BehaviorSubject<List<MovieModel>>();
+
+  final _moviesGenresProvider = PublishSubject<List<GenreModel>>();
+  final _moviesGenresIdsProvider = PublishSubject<List<int>>();
 
 
   Observable<String> get getMoviesBackgroundImage => _moviesImageProvider.stream;
@@ -19,10 +23,13 @@ class MoviesScreenBloc {
 
   Observable<List<MovieModel>> get getAllMovies => _moviesProvider.stream;
 
+  Observable<List<GenreModel>> get getGenreNames => _moviesGenresProvider.stream;
+
   Function(double) get pushMoviesScale => _moviesPageScaleProvider.sink.add;
   Function(double) get pushMoviesPagePosition=> _moviesPagePositionProvider.sink.add;
   Function(String) get setMoviesBackgroundImage => _moviesImageProvider.sink.add;
 
+  Function(List<int>) get pushGenreIds => _moviesGenresIdsProvider.sink.add;
 
   double _moviesCurrentPageNum = 0;
 
@@ -111,6 +118,20 @@ class MoviesScreenBloc {
     _moviesPagePositionProvider.listen( (value) {
       _moviesCurrentPageNum = value;
     });
+
+    _moviesGenresIdsProvider.listen( (values) async {
+      await _repository.getMovieGenres().then( (genres) {
+        List<GenreModel> newGenres = [];
+        for(var value in values){
+          genres.forEach( (model) {
+            if(value == model.id){
+              newGenres.add(model);
+            }
+          });
+        }
+        _moviesGenresProvider.sink.add(newGenres);
+      });
+    });
   }
 
   dispose(){
@@ -119,5 +140,8 @@ class MoviesScreenBloc {
     _moviesPagePositionProvider.close();
 
     _moviesProvider.close();
+
+    _moviesGenresProvider.close();
+    _moviesGenresIdsProvider.close();
   }
 }

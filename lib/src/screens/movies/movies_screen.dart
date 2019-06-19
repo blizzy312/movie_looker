@@ -6,7 +6,7 @@ import 'package:movie_looker/src/blocs/movies_screen_bloc_provider.dart';
 import 'package:movie_looker/src/blocs/tmdb_api_bloc.dart';
 import 'package:movie_looker/src/blocs/tmdb_api_provider.dart';
 import 'package:movie_looker/src/models/discover_movies_model.dart';
-import 'package:movie_looker/src/screens/see_all_screen.dart';
+import 'package:movie_looker/src/screens/movies/movies_see_all_screen.dart';
 import 'package:movie_looker/src/utils/types.dart';
 import 'package:movie_looker/src/widgets/collection_of_movies.dart';
 

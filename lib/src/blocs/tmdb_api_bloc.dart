@@ -1,10 +1,11 @@
 import 'package:movie_looker/src/models/celebrities_model.dart';
 import 'package:movie_looker/src/models/discover_tv_shows_model.dart';
+import 'package:movie_looker/src/models/genre_model.dart';
 import 'package:movie_looker/src/models/images_model.dart';
 import 'package:movie_looker/src/models/cast_model.dart';
 import 'package:movie_looker/src/models/discover_movies_model.dart';
 import 'package:movie_looker/src/models/movie_details_model.dart';
-import 'package:movie_looker/src/models/tv_show_model.dart';
+import 'package:movie_looker/src/models/tv_show_detailed_model.dart';
 import 'package:movie_looker/src/models/videos_model.dart';
 import 'package:movie_looker/src/resources/repository.dart';
 import 'package:rxdart/rxdart.dart';
@@ -15,6 +16,7 @@ class TmdbApiBloc{
   final _discoverMoviesProvider = BehaviorSubject<DiscoverMoviesModel>();
   final _discoverTvShowsProvider = BehaviorSubject<DiscoverTvShowsModel>();
 
+  final _movieGenresProvider = BehaviorSubject<List<GenreModel>>();
   final _trendingMoviesProvider = BehaviorSubject<DiscoverMoviesModel>();
   final _mostPopularMoviesProvider = BehaviorSubject<DiscoverMoviesModel>();
   final _topRatedProvider = BehaviorSubject<DiscoverMoviesModel>();
@@ -33,11 +35,12 @@ class TmdbApiBloc{
   final _videosProvider = PublishSubject<VideosModel>();
   final _similarMoviesProvider = PublishSubject<DiscoverMoviesModel>();
   final _similarTvShowsProvider = PublishSubject<DiscoverTvShowsModel>();
-  final _tvShowProvider = PublishSubject<TvShowModel>();
+  final _tvShowProvider = PublishSubject<TvShowDetailsModel>();
 
   Observable<DiscoverMoviesModel> get discoverMovies => _discoverMoviesProvider.stream;
   Observable<DiscoverTvShowsModel> get discoverTvShows => _discoverTvShowsProvider.stream;
 
+  Observable<List<GenreModel>> get movieGenres => _movieGenresProvider.stream;
   Observable<DiscoverMoviesModel> get trendingMovies => _trendingMoviesProvider.stream;
   Observable<DiscoverMoviesModel> get mostPopularMovies => _mostPopularMoviesProvider.stream;
   Observable<DiscoverMoviesModel> get topRatedMovies => _topRatedProvider.stream;
@@ -59,13 +62,19 @@ class TmdbApiBloc{
   Observable<DiscoverMoviesModel> get fetchSimilarMovies => _similarMoviesProvider.stream;
   Observable<DiscoverTvShowsModel> get fetchSimilarTvShows => _similarTvShowsProvider.stream;
 
-  Observable<TvShowModel> get fetchTvShow => _tvShowProvider.stream;
+  Observable<TvShowDetailsModel> get fetchTvShow => _tvShowProvider.stream;
 
 //  fetchUpcomingMoviesByPage(page) => _upcomingMoviesProvider.sink.add(page);
+
+
 
   fetchDiscoverPage() async{
     _discoverMoviesProvider.sink.add(await _repository.getDiscoverMovies());
     _discoverTvShowsProvider.sink.add(await _repository.getDiscoverTvShows());
+  }
+
+  fetchMovieGenres() async{
+    _movieGenresProvider.sink.add(await _repository.getMovieGenres());
   }
 
   fetchMoviesPage() async {
@@ -77,8 +86,8 @@ class TmdbApiBloc{
 
   fetchTvShowPage() async {
     _trendingTvShowsProvider.sink.add(await _repository.getTrendingTvShows());
-    _mostPopularTvShowsProvider.sink.add(await _repository.getMostPopularTvShows());
-    _topRatedTvShowsProvider.sink.add(await _repository.getTopRatedTvShows());
+    _mostPopularTvShowsProvider.sink.add(await _repository.getMostPopularTvShowsByPage(1));
+    _topRatedTvShowsProvider.sink.add(await _repository.getTopRatedTvShowsByPage(1));
   }
 
   fetchCelebritiesPage() async {
@@ -111,6 +120,7 @@ class TmdbApiBloc{
     _discoverMoviesProvider.close();
     _discoverTvShowsProvider.close();
 
+    _movieGenresProvider.close();
     _trendingMoviesProvider.close();
     _mostPopularMoviesProvider.close();
     _topRatedProvider.close();

@@ -43,27 +43,24 @@ class UpcomingMovieDetails extends StatelessWidget {
                     Container(
                       height:MediaQuery.of(context).size.height * 0.7,
                       width: double.infinity,
-                      child: Hero(
-                        tag: currentMovie.id,
-                        child: ShaderMask(
-                          child: Image.network(
-                            'https://image.tmdb.org/t/p/w500${currentMovie.posterPath}',
-                            fit: BoxFit.cover,
-                            alignment: Alignment.topCenter,
-                          ),
-                          shaderCallback: (Rect bounds){
-                            return LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Colors.transparent,
-                                Colors.indigo[900]
-                              ],
-                              stops: [0.0, 0.95]
-                            ).createShader(bounds);
-                          },
-                          blendMode: BlendMode.srcATop,
+                      child: ShaderMask(
+                        child: Image.network(
+                          'https://image.tmdb.org/t/p/w500${currentMovie.posterPath}',
+                          fit: BoxFit.cover,
+                          alignment: Alignment.topCenter,
                         ),
+                        shaderCallback: (Rect bounds){
+                          return LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.transparent,
+                              Colors.indigo[900]
+                            ],
+                            stops: [0.0, 0.95]
+                          ).createShader(bounds);
+                        },
+                        blendMode: BlendMode.srcATop,
                       ),
                     ),
                     Positioned(

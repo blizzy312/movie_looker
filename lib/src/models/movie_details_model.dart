@@ -1,11 +1,11 @@
-import 'genres.dart';
+import 'genre_model.dart';
 
 class MovieDetailsModel {
   bool adult;
   String backdropPath;
   BelongsToCollection belongsToCollection;
   int budget;
-  List<Genres> genres;
+  List<GenreModel> genres;
   String homepage;
   int id;
   String imdbId;
@@ -62,9 +62,9 @@ class MovieDetailsModel {
       : null;
     budget = json['budget'];
     if (json['genres'] != null) {
-      genres = new List<Genres>();
+      genres = new List<GenreModel>();
       json['genres'].forEach((v) {
-        genres.add(new Genres.fromJson(v));
+        genres.add(new GenreModel.fromJson(v));
       });
     }
     homepage = json['homepage'];

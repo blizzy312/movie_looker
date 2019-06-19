@@ -1,11 +1,11 @@
 
 import 'package:flutter/material.dart';
-import 'package:movie_looker/src/models/genres.dart';
+import 'package:movie_looker/src/models/genre_model.dart';
 
 
 
 class GenresWidgets extends StatelessWidget {
-  final List<Genres> genres;
+  final List<GenreModel> genres;
 
   GenresWidgets({this.genres});
 
@@ -13,7 +13,7 @@ class GenresWidgets extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Widget> genreWidgets = [];
-    for (Genres genre in genres){
+    for (GenreModel genre in genres){
       genreWidgets.add(genreView(context, genre.name));
       genreWidgets.add( SizedBox(width: 5,));
     }

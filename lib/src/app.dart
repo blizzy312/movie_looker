@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_looker/src/blocs/movies_screen_bloc_provider.dart';
+import 'package:movie_looker/src/blocs/tv_shows_screen_bloc_provider.dart';
 import 'package:movie_looker/src/screens/base_screen.dart';
 
 import 'blocs/screens_control_bloc_provider.dart';
@@ -18,8 +19,10 @@ class MyApp extends StatelessWidget{
         child: ScreensBlocProvider(
           child: ScreensControlProvider(
             child: MoviesScreenBlocProvider(
-              child: MaterialApp(
-                onGenerateRoute: routes,
+              child: TvShowsScreenBlocProvider(
+                child: MaterialApp(
+                  onGenerateRoute: routes,
+                ),
               ),
             ),
           ),

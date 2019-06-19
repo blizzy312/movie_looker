@@ -1,7 +1,7 @@
 import 'package:movie_looker/src/screens/celebrities/celebrities_screen.dart';
 import 'package:movie_looker/src/screens/home_screen.dart';
 import 'package:movie_looker/src/screens/movies/movies_screen.dart';
-import 'package:movie_looker/src/screens/tv_shows/tv_show_screen.dart';
+import 'package:movie_looker/src/screens/tv_shows/tv_shows_screen.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter/material.dart';
 

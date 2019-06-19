@@ -9,7 +9,7 @@ import 'package:youtube_player/youtube_player.dart';
 
 import 'package:movie_looker/src/blocs/tmdb_api_bloc.dart';
 import 'package:movie_looker/src/models/cast_model.dart';
-import 'package:movie_looker/src/models/tv_show_model.dart';
+import 'package:movie_looker/src/models/tv_show_detailed_model.dart';
 import 'package:movie_looker/src/models/videos_model.dart';
 import 'package:movie_looker/src/widgets/casting_actor_card.dart';
 import 'package:movie_looker/src/widgets/genres_widget.dart';
@@ -29,13 +29,13 @@ class TvShowDetails extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: StreamBuilder<TvShowModel>(
+      body: StreamBuilder<TvShowDetailsModel>(
         stream: movieBloc.fetchTvShow,
-        builder: (context, AsyncSnapshot<TvShowModel> tvShowSnapshot) {
+        builder: (context, AsyncSnapshot<TvShowDetailsModel> tvShowSnapshot) {
           if(!tvShowSnapshot.hasData){
             return Container();
           }
-          TvShowModel currentTvShow = tvShowSnapshot.data;
+          TvShowDetailsModel currentTvShow = tvShowSnapshot.data;
           return ListView(
             children: <Widget>[
               Transform.translate(
@@ -88,7 +88,7 @@ class TvShowDetails extends StatelessWidget {
     );
   }
 
-  Widget getTitleInfo(context, TvShowModel currentTvShow){
+  Widget getTitleInfo(context, TvShowDetailsModel currentTvShow){
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -136,7 +136,7 @@ class TvShowDetails extends StatelessWidget {
     );
   }
 
-  Widget getDetails(context, TvShowModel currentTvShow){
+  Widget getDetails(context, TvShowDetailsModel currentTvShow){
     return Container(
       color: Color(0xFF1D2840),
       child: Column(
@@ -191,7 +191,7 @@ class TvShowDetails extends StatelessWidget {
     );
   }
 
-  Widget getMovieParameters(TvShowModel currentTvShow){
+  Widget getMovieParameters(TvShowDetailsModel currentTvShow){
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       child: Row(

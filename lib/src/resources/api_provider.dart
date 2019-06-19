@@ -3,11 +3,12 @@ import 'dart:convert';
 import 'package:http/http.dart' show Client;
 import 'package:movie_looker/src/models/celebrities_model.dart';
 import 'package:movie_looker/src/models/discover_tv_shows_model.dart';
+import 'package:movie_looker/src/models/genre_model.dart';
 import 'package:movie_looker/src/models/images_model.dart';
 import 'package:movie_looker/src/models/cast_model.dart';
 import 'package:movie_looker/src/models/movie_details_model.dart';
 import 'package:movie_looker/src/models/discover_movies_model.dart';
-import 'package:movie_looker/src/models/tv_show_model.dart';
+import 'package:movie_looker/src/models/tv_show_detailed_model.dart';
 import 'package:movie_looker/src/models/videos_model.dart';
 
 class ApiProvider{
@@ -31,6 +32,20 @@ class ApiProvider{
     final response = await client.get('$_rootAddress/discover/tv?api_key=$_apiKey&language=en-US&sort_by=popularity.desc&page=1&timezone=America%2FNew_York&include_null_first_air_dates=false');
     final temp = json.decode(response.body);
     return DiscoverTvShowsModel.fromJson(temp);
+  }
+
+  Future<List<GenreModel>> getMovieGenres() async{
+    final response = await client.get('$_rootAddress/genre/movie/list?api_key=$_apiKey&language=en-US');
+    final temp = json.decode(response.body);
+    List<GenreModel> genres = [];
+
+    if (temp['genres'] != null) {
+      genres = new List<GenreModel>();
+      temp['genres'].forEach((v) {
+        genres.add(new GenreModel.fromJson(v));
+      });
+    }
+    return genres;
   }
 
   Future<DiscoverMoviesModel> getTrendingMovies() async{
@@ -64,21 +79,21 @@ class ApiProvider{
     return DiscoverTvShowsModel.fromJson(temp);
   }
 
-  Future<DiscoverTvShowsModel> getMostPopularTvShows() async {
-    final response = await client.get('$_rootAddress/tv/popular?api_key=$_apiKey&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1');
+  Future<DiscoverTvShowsModel> getMostPopularTvShowsByPage(int page) async {
+    final response = await client.get('$_rootAddress/tv/popular?api_key=$_apiKey&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=$page');
     final temp = json.decode(response.body);
     return DiscoverTvShowsModel.fromJson(temp);
   }
 
-  Future<DiscoverTvShowsModel> getTopRatedTvShows() async {
-    final response = await client.get('$_rootAddress/tv/top_rated?api_key=$_apiKey&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1');
+  Future<DiscoverTvShowsModel> getTopRatedTvShowsByPage(int page) async {
+    final response = await client.get('$_rootAddress/tv/top_rated?api_key=$_apiKey&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=$page');
     final temp = json.decode(response.body);
     return DiscoverTvShowsModel.fromJson(temp);
   }
 
 
   Future<MovieDetailsModel> getMovie(int movieID) async{
-    final response = await client.get('$_rootAddress/movie/$movieID?api_key=$_apiKey&language=en-US');
+    final response = await client.get('$_rootAddress/movie/$movieID?api_key=$_apiKey&language=en-US&region=US');
     final temp = json.decode(response.body);
     return MovieDetailsModel.fromJson(temp);
   }
@@ -107,10 +122,10 @@ class ApiProvider{
     return DiscoverMoviesModel.fromJson(temp);
   }
 
-  Future<TvShowModel> getTvShow(int tvShowID) async{
+  Future<TvShowDetailsModel> getTvShow(int tvShowID) async{
     final response = await client.get('$_rootAddress/tv/$tvShowID?api_key=$_apiKey&language=en-US');
     final temp = json.decode(response.body);
-    return TvShowModel.fromJson(temp);
+    return TvShowDetailsModel.fromJson(temp);
   }
 
   Future<CastModel> getTvShowCast(int tvShowID) async{
